@@ -1,0 +1,222 @@
+[
+  {
+    "id": "two-sum",
+    "title": "Two Sum",
+    "difficulty": "Easy",
+    "topics": ["Array", "Hash Map"],
+    "description": "Given an array of integers `nums` and an integer `target`, return the indices of the two numbers such that they add up to `target`. Assume exactly one solution exists and you may not use the same element twice.",
+    "examples": [{ "input": "nums = [2,7,11,15], target = 9", "output": "[0,1]" }],
+    "starterCode": "function twoSum(nums, target) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/two-sum/"
+  },
+  {
+    "id": "valid-parentheses",
+    "title": "Valid Parentheses",
+    "difficulty": "Easy",
+    "topics": ["Stack", "String"],
+    "description": "Given a string `s` containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid (every open bracket is closed by the same type in the correct order).",
+    "examples": [{ "input": "s = \"()[]{}\"", "output": "true" }, { "input": "s = \"(]\"", "output": "false" }],
+    "starterCode": "function isValid(s) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/valid-parentheses/"
+  },
+  {
+    "id": "reverse-linked-list",
+    "title": "Reverse Linked List",
+    "difficulty": "Easy",
+    "topics": ["Linked List", "Recursion"],
+    "description": "Given the head of a singly linked list, reverse the list and return the new head.",
+    "examples": [{ "input": "head = [1,2,3,4,5]", "output": "[5,4,3,2,1]" }],
+    "starterCode": "function reverseList(head) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/reverse-linked-list/"
+  },
+  {
+    "id": "binary-search",
+    "title": "Binary Search",
+    "difficulty": "Easy",
+    "topics": ["Array", "Binary Search"],
+    "description": "Given a sorted array of integers `nums` and a target value, return the index of target if found, else -1. Must run in O(log n).",
+    "examples": [{ "input": "nums = [-1,0,3,5,9,12], target = 9", "output": "4" }],
+    "starterCode": "function search(nums, target) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/binary-search/"
+  },
+  {
+    "id": "maximum-subarray",
+    "title": "Maximum Subarray",
+    "difficulty": "Easy",
+    "topics": ["Array", "Dynamic Programming"],
+    "description": "Given an integer array `nums`, find the contiguous subarray with the largest sum and return that sum.",
+    "examples": [{ "input": "nums = [-2,1,-3,4,-1,2,1,-5,4]", "output": "6" }],
+    "starterCode": "function maxSubArray(nums) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/maximum-subarray/"
+  },
+  {
+    "id": "valid-anagram",
+    "title": "Valid Anagram",
+    "difficulty": "Easy",
+    "topics": ["String", "Hash Map", "Sorting"],
+    "description": "Given two strings `s` and `t`, return true if `t` is an anagram of `s`, false otherwise.",
+    "examples": [{ "input": "s = \"anagram\", t = \"nagaram\"", "output": "true" }],
+    "starterCode": "function isAnagram(s, t) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/valid-anagram/"
+  },
+  {
+    "id": "linked-list-cycle",
+    "title": "Linked List Cycle",
+    "difficulty": "Easy",
+    "topics": ["Linked List", "Two Pointers"],
+    "description": "Given the head of a linked list, determine if it has a cycle using O(1) extra space (Floyd's cycle detection).",
+    "examples": [{ "input": "head = [3,2,0,-4], pos = 1", "output": "true" }],
+    "starterCode": "function hasCycle(head) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/linked-list-cycle/"
+  },
+  {
+    "id": "best-time-to-buy-sell-stock",
+    "title": "Best Time to Buy and Sell Stock",
+    "difficulty": "Easy",
+    "topics": ["Array", "Dynamic Programming"],
+    "description": "Given an array `prices` where prices[i] is the stock price on day i, find the maximum profit from a single buy and a single later sell.",
+    "examples": [{ "input": "prices = [7,1,5,3,6,4]", "output": "5" }],
+    "starterCode": "function maxProfit(prices) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/"
+  },
+  {
+    "id": "longest-substring",
+    "title": "Longest Substring Without Repeating Characters",
+    "difficulty": "Medium",
+    "topics": ["String", "Sliding Window"],
+    "description": "Given a string `s`, find the length of the longest substring without repeating characters.",
+    "examples": [{ "input": "s = \"abcabcbb\"", "output": "3" }],
+    "starterCode": "function lengthOfLongestSubstring(s) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/longest-substring-without-repeating-characters/"
+  },
+  {
+    "id": "merge-intervals",
+    "title": "Merge Intervals",
+    "difficulty": "Medium",
+    "topics": ["Array", "Sorting"],
+    "description": "Given an array of intervals where intervals[i] = [start, end], merge all overlapping intervals and return an array of non-overlapping intervals covering all the input.",
+    "examples": [{ "input": "intervals = [[1,3],[2,6],[8,10],[15,18]]", "output": "[[1,6],[8,10],[15,18]]" }],
+    "starterCode": "function merge(intervals) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/merge-intervals/"
+  },
+  {
+    "id": "3sum",
+    "title": "3Sum",
+    "difficulty": "Medium",
+    "topics": ["Array", "Two Pointers", "Sorting"],
+    "description": "Given an integer array `nums`, return all unique triplets [nums[i], nums[j], nums[k]] such that i != j != k and nums[i] + nums[j] + nums[k] == 0.",
+    "examples": [{ "input": "nums = [-1,0,1,2,-1,-4]", "output": "[[-1,-1,2],[-1,0,1]]" }],
+    "starterCode": "function threeSum(nums) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/3sum/"
+  },
+  {
+    "id": "product-except-self",
+    "title": "Product of Array Except Self",
+    "difficulty": "Medium",
+    "topics": ["Array", "Prefix Sum"],
+    "description": "Given an array `nums`, return an array `answer` where answer[i] is the product of all elements except nums[i], without using division, in O(n).",
+    "examples": [{ "input": "nums = [1,2,3,4]", "output": "[24,12,8,6]" }],
+    "starterCode": "function productExceptSelf(nums) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/product-of-array-except-self/"
+  },
+  {
+    "id": "number-of-islands",
+    "title": "Number of Islands",
+    "difficulty": "Medium",
+    "topics": ["Graph", "DFS", "BFS", "Matrix"],
+    "description": "Given an m x n 2D binary grid representing '1' (land) and '0' (water), return the number of islands (connected land cells, horizontally/vertically).",
+    "examples": [{ "input": "grid = [[\"1\",\"1\",\"0\"],[\"1\",\"0\",\"0\"],[\"0\",\"0\",\"1\"]]", "output": "2" }],
+    "starterCode": "function numIslands(grid) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/number-of-islands/"
+  },
+  {
+    "id": "binary-tree-level-order",
+    "title": "Binary Tree Level Order Traversal",
+    "difficulty": "Medium",
+    "topics": ["Tree", "BFS"],
+    "description": "Given the root of a binary tree, return the level order traversal of its nodes' values (left to right, level by level).",
+    "examples": [{ "input": "root = [3,9,20,null,null,15,7]", "output": "[[3],[9,20],[15,7]]" }],
+    "starterCode": "function levelOrder(root) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/binary-tree-level-order-traversal/"
+  },
+  {
+    "id": "course-schedule",
+    "title": "Course Schedule",
+    "difficulty": "Medium",
+    "topics": ["Graph", "Topological Sort", "DFS"],
+    "description": "Given `numCourses` and a list of prerequisite pairs, determine if it's possible to finish all courses (i.e. the prerequisite graph has no cycle).",
+    "examples": [{ "input": "numCourses = 2, prerequisites = [[1,0]]", "output": "true" }],
+    "starterCode": "function canFinish(numCourses, prerequisites) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/course-schedule/"
+  },
+  {
+    "id": "word-break",
+    "title": "Word Break",
+    "difficulty": "Medium",
+    "topics": ["Dynamic Programming", "String"],
+    "description": "Given a string `s` and a dictionary of strings `wordDict`, return true if `s` can be segmented into a space-separated sequence of dictionary words.",
+    "examples": [{ "input": "s = \"leetcode\", wordDict = [\"leet\",\"code\"]", "output": "true" }],
+    "starterCode": "function wordBreak(s, wordDict) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/word-break/"
+  },
+  {
+    "id": "coin-change",
+    "title": "Coin Change",
+    "difficulty": "Medium",
+    "topics": ["Dynamic Programming"],
+    "description": "Given coin denominations and a target amount, return the fewest number of coins needed to make that amount, or -1 if impossible.",
+    "examples": [{ "input": "coins = [1,2,5], amount = 11", "output": "3" }],
+    "starterCode": "function coinChange(coins, amount) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/coin-change/"
+  },
+  {
+    "id": "kth-largest-element",
+    "title": "Kth Largest Element in an Array",
+    "difficulty": "Medium",
+    "topics": ["Heap", "Sorting", "Quickselect"],
+    "description": "Given an integer array `nums` and integer `k`, return the kth largest element in the array (not the kth distinct element).",
+    "examples": [{ "input": "nums = [3,2,1,5,6,4], k = 2", "output": "5" }],
+    "starterCode": "function findKthLargest(nums, k) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/kth-largest-element-in-an-array/"
+  },
+  {
+    "id": "lru-cache",
+    "title": "LRU Cache",
+    "difficulty": "Hard",
+    "topics": ["Design", "Hash Map", "Linked List"],
+    "description": "Design a data structure that follows the constraints of a Least Recently Used (LRU) cache with get and put operations in O(1) average time.",
+    "examples": [{ "input": "capacity = 2, ops = [put(1,1),put(2,2),get(1),put(3,3),get(2)]", "output": "[null,null,1,null,-1]" }],
+    "starterCode": "class LRUCache {\n  constructor(capacity) {\n    // your code here\n  }\n  get(key) {\n    // your code here\n  }\n  put(key, value) {\n    // your code here\n  }\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/lru-cache/"
+  },
+  {
+    "id": "trapping-rain-water",
+    "title": "Trapping Rain Water",
+    "difficulty": "Hard",
+    "topics": ["Array", "Two Pointers", "Dynamic Programming"],
+    "description": "Given n non-negative integers representing an elevation map, compute how much water it can trap after raining.",
+    "examples": [{ "input": "height = [0,1,0,2,1,0,1,3,2,1,2,1]", "output": "6" }],
+    "starterCode": "function trap(height) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/trapping-rain-water/"
+  },
+  {
+    "id": "merge-k-sorted-lists",
+    "title": "Merge k Sorted Lists",
+    "difficulty": "Hard",
+    "topics": ["Linked List", "Heap", "Divide and Conquer"],
+    "description": "You are given an array of k linked-lists, each sorted in ascending order. Merge all the linked-lists into one sorted linked-list.",
+    "examples": [{ "input": "lists = [[1,4,5],[1,3,4],[2,6]]", "output": "[1,1,2,3,4,4,5,6]" }],
+    "starterCode": "function mergeKLists(lists) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/merge-k-sorted-lists/"
+  },
+  {
+    "id": "word-ladder",
+    "title": "Word Ladder",
+    "difficulty": "Hard",
+    "topics": ["Graph", "BFS"],
+    "description": "Given beginWord, endWord, and a wordList, return the length of the shortest transformation sequence from beginWord to endWord, changing one letter at a time.",
+    "examples": [{ "input": "beginWord = \"hit\", endWord = \"cog\", wordList = [\"hot\",\"dot\",\"dog\",\"lot\",\"log\",\"cog\"]", "output": "5" }],
+    "starterCode": "function ladderLength(beginWord, endWord, wordList) {\n  // your code here\n}",
+    "leetcodeUrl": "https://leetcode.com/problems/word-ladder/"
+  }
+]

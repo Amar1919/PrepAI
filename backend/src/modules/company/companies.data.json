@@ -1,0 +1,87 @@
+[
+  {
+    "id": "google",
+    "name": "Google",
+    "logo": "🔍",
+    "focus": ["DSA", "System Design", "Googleyness"],
+    "difficulty": "Hard",
+    "questions": [
+      "How would you design a URL shortener like Bit.ly?",
+      "Explain how you would find the middle of a linked list in one pass.",
+      "Design a rate limiter for an API gateway.",
+      "How do you handle a disagreement with a teammate about a technical approach?",
+      "Given a stream of integers, design a class to find the median efficiently."
+    ]
+  },
+  {
+    "id": "amazon",
+    "name": "Amazon",
+    "logo": "📦",
+    "focus": ["Leadership Principles", "DSA", "Bar Raiser"],
+    "difficulty": "Hard",
+    "questions": [
+      "Tell me about a time you disagreed with your manager and how you handled it (Leadership Principle: Have Backbone).",
+      "Design a warehouse inventory system that scales to millions of SKUs.",
+      "Given an array, find the subarray with the maximum sum.",
+      "Describe a time you had to deliver results under a tight deadline.",
+      "How would you design Amazon's recommendation engine at a high level?"
+    ]
+  },
+  {
+    "id": "microsoft",
+    "name": "Microsoft",
+    "logo": "🪟",
+    "focus": ["DSA", "System Design", "Behavioral"],
+    "difficulty": "Medium",
+    "questions": [
+      "Design a scalable notification system for Teams.",
+      "Implement a function to detect a cycle in a directed graph.",
+      "How would you prioritize features with limited engineering resources?",
+      "Explain the difference between REST and GraphQL and when you'd use each.",
+      "Tell me about a project where you had to learn a new technology quickly."
+    ]
+  },
+  {
+    "id": "meta",
+    "name": "Meta",
+    "topics": ["DSA", "System Design", "Behavioral"],
+    "logo": "♾️",
+    "focus": ["DSA", "System Design", "Move Fast"],
+    "difficulty": "Hard",
+    "questions": [
+      "Design a news feed ranking system.",
+      "Given a binary tree, serialize and deserialize it.",
+      "How would you A/B test a new feature rollout?",
+      "Describe a time you shipped something imperfect to move fast, and the tradeoffs.",
+      "Design a chat application that supports millions of concurrent users."
+    ]
+  },
+  {
+    "id": "netflix",
+    "name": "Netflix",
+    "logo": "🎬",
+    "focus": ["System Design", "Culture Fit", "DSA"],
+    "difficulty": "Medium",
+    "questions": [
+      "How would you design a video recommendation system?",
+      "Describe how you'd handle a production incident with high customer impact.",
+      "What does 'freedom and responsibility' mean to you in a work context?",
+      "Design a content delivery strategy for global video streaming.",
+      "Implement an LRU cache for a video thumbnail service."
+    ]
+  },
+  {
+    "id": "startup",
+    "name": "Early-Stage Startup",
+    "logo": "🚀",
+    "focus": ["Full-Stack Thinking", "Ownership", "Speed"],
+    "difficulty": "Medium",
+    "questions": [
+      "Walk me through a project you built end-to-end, from idea to deployment.",
+      "How comfortable are you wearing multiple hats (frontend, backend, ops)?",
+      "Describe a time you had to make a decision with incomplete information.",
+      "How would you approach the first 30 days in this role?",
+      "What's a technical decision you'd make differently if given more time?"
+    ]
+  }
+]
