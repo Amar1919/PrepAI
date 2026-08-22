@@ -11,6 +11,11 @@ const messageSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    attachment: {
+      fileName: { type: String },
+      fileType: { type: String },
+      extractedText: { type: String },
+    },
   },
   { timestamps: true, _id: false }
 );
@@ -23,8 +28,6 @@ const chatSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    // Auto-derived from the first user message so the sidebar has a
-    // readable label without the user having to name every conversation.
     title: {
       type: String,
       default: "New conversation",

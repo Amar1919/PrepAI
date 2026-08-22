@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { FiSend, FiZap, FiLoader } from "react-icons/fi";
+import { FiSend, FiZap, FiLoader, FiPaperclip, FiX, FiFileText, FiFile } from "react-icons/fi";
 import { useToast } from "../../../shared/context/ToastContext";
 import {
   listConversations,
   getConversation,
   deleteConversation,
   streamMessage,
+  ALLOWED_ATTACHMENT_TYPES,
+  MAX_ATTACHMENT_SIZE,
 } from "../services/chatService";
 import ChatSessionSidebar from "../components/ChatSessionSidebar";
 import ChatBubble from "../components/ChatBubble";
@@ -24,12 +26,14 @@ function Chat() {
   const [activeId, setActiveId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [attachedFile, setAttachedFile] = useState(null);
   const [loadingList, setLoadingList] = useState(true);
   const [loadingConversation, setLoadingConversation] = useState(false);
   const [sending, setSending] = useState(false);
 
   const scrollRef = useRef(null);
   const abortRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const fetchConversations = async () => {
     try {
@@ -67,6 +71,7 @@ function Chat() {
   const startNewConversation = () => {
     setActiveId(null);
     setMessages([]);
+    setAttachedFile(null);
   };
 
   const handleDelete = async (id) => {
@@ -79,14 +84,34 @@ function Chat() {
     }
   };
 
+  const pickFile = (file) => {
+    if (!file) return;
+    if (!ALLOWED_ATTACHMENT_TYPES.includes(file.type)) {
+      toast.error("Only PDF or .txt files are supported");
+      return;
+    }
+    if (file.size > MAX_ATTACHMENT_SIZE) {
+      toast.error("File must be under 5MB");
+      return;
+    }
+    setAttachedFile(file);
+  };
+
   const sendMessage = async (text) => {
-    const trimmed = text.trim();
-    if (!trimmed || sending) return;
+    const trimmed = (text || "").trim();
+    const file = attachedFile;
+    if (!trimmed && !file) return;
+    if (sending) return;
 
     setInput("");
+    setAttachedFile(null);
     setSending(true);
 
-    const userMessage = { role: "user", content: trimmed };
+    const userMessage = {
+      role: "user",
+      content: trimmed || `Sent a document: ${file?.name}`,
+      ...(file && { attachment: { fileName: file.name } }),
+    };
     setMessages((prev) => [...prev, userMessage, { role: "assistant", content: "" }]);
 
     const controller = new AbortController();
@@ -96,6 +121,7 @@ function Chat() {
       const newId = await streamMessage({
         conversationId: activeId,
         message: trimmed,
+        file,
         signal: controller.signal,
         onChunk: (chunk) => {
           setMessages((prev) => {
@@ -127,6 +153,8 @@ function Chat() {
     sendMessage(input);
   };
 
+  const FileTypeIcon = attachedFile?.type === "application/pdf" ? FiFileText : FiFile;
+
   return (
     <div className="grid lg:grid-cols-4 gap-4 h-[calc(100vh-8.5rem)]">
       <div className="card p-4 lg:col-span-1 hidden lg:flex flex-col">
@@ -151,7 +179,7 @@ function Chat() {
               </div>
               <h2 className="text-base font-semibold text-slate-100">PrepAI Assistant</h2>
               <p className="text-sm text-slate-500 mt-1 max-w-sm">
-                Ask about interview questions, resume feedback, DSA concepts, or anything else on your mind.
+                Ask about interview questions, resume feedback, DSA concepts, or attach a document to discuss it.
               </p>
               <div className="grid sm:grid-cols-2 gap-2 mt-5 w-full max-w-md">
                 {SUGGESTED_PROMPTS.map((p) => (
@@ -171,23 +199,64 @@ function Chat() {
                 key={i}
                 role={m.role}
                 content={m.content}
+                attachment={m.attachment}
                 streaming={sending && i === messages.length - 1 && m.role === "assistant"}
               />
             ))
           )}
         </div>
 
-        <form onSubmit={handleSubmit} className="border-t border-base-700 p-3 flex items-center gap-2">
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask the PrepAI Assistant..."
-            className="input-field flex-1"
-            disabled={sending}
-          />
-          <button type="submit" disabled={sending || !input.trim()} className="btn-primary shrink-0 px-3.5">
-            {sending ? <FiLoader className="animate-spin" size={16} /> : <FiSend size={16} />}
-          </button>
+        <form onSubmit={handleSubmit} className="border-t border-base-700 p-3 space-y-2">
+          {attachedFile && (
+            <div className="flex items-center gap-2 bg-base-800 border border-base-700 rounded-lg px-3 py-2 w-fit text-xs text-slate-300">
+              <FileTypeIcon size={14} className="text-accent-400 shrink-0" />
+              <span className="truncate max-w-[220px]">{attachedFile.name}</span>
+              <button
+                type="button"
+                onClick={() => setAttachedFile(null)}
+                className="text-slate-500 hover:text-rose-400 shrink-0"
+              >
+                <FiX size={14} />
+              </button>
+            </div>
+          )}
+
+          <div className="flex items-center gap-2">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,.txt,application/pdf,text/plain"
+              className="hidden"
+              onChange={(e) => {
+                pickFile(e.target.files?.[0]);
+                e.target.value = "";
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={sending}
+              title="Attach a PDF or text file"
+              className="btn-ghost shrink-0 px-2.5"
+            >
+              <FiPaperclip size={17} />
+            </button>
+
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask the PrepAI Assistant..."
+              className="input-field flex-1"
+              disabled={sending}
+            />
+            <button
+              type="submit"
+              disabled={sending || (!input.trim() && !attachedFile)}
+              className="btn-primary shrink-0 px-3.5"
+            >
+              {sending ? <FiLoader className="animate-spin" size={16} /> : <FiSend size={16} />}
+            </button>
+          </div>
         </form>
       </div>
     </div>

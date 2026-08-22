@@ -6,20 +6,25 @@ export const getConversation = (id) => API.get(`/chat/${id}`);
 
 export const deleteConversation = (id) => API.delete(`/chat/${id}`);
 
-// Streaming needs a raw fetch (not axios) so we can read the response body
-// as it arrives via ReadableStream, for the live "typing" effect.
+export const ALLOWED_ATTACHMENT_TYPES = ["application/pdf", "text/plain"];
+export const MAX_ATTACHMENT_SIZE = 5 * 1024 * 1024; // 5MB, matches backend limit
+
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
-export async function streamMessage({ conversationId, message, onChunk, signal }) {
+export async function streamMessage({ conversationId, message, file, onChunk, signal }) {
   const token = localStorage.getItem("token");
+
+  const formData = new FormData();
+  if (conversationId) formData.append("conversationId", conversationId);
+  if (message) formData.append("message", message);
+  if (file) formData.append("document", file);
 
   const res = await fetch(`${API_BASE}/chat/message`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: token ? `Bearer ${token}` : "",
     },
-    body: JSON.stringify({ conversationId, message }),
+    body: formData,
     signal,
   });
 

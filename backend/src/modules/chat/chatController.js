@@ -1,13 +1,19 @@
+const fs = require("fs");
+const pdfParse = require("pdf-parse");
 const Chat = require("./Chat.model");
-const { streamChat } = require("../ai/geminiService");
+const User = require("../user/User.model");
+const { streamChat } = require("../../shared/utils/groqService");
 const asyncHandler = require("../../shared/utils/asyncHandler");
 const ApiError = require("../../shared/utils/ApiError");
 const { recordActivity } = require("../../shared/utils/gamification");
 
 const MAX_TITLE_LENGTH = 60;
+const MAX_EXTRACTED_CHARS = 6000;
+const MAX_STORED_EXTRACTED_CHARS = 4000;
 
-const deriveTitle = (message) => {
-  const trimmed = message.trim().replace(/\s+/g, " ");
+const deriveTitle = (message, fileName) => {
+  const base = message.trim() || (fileName ? `About ${fileName}` : "New conversation");
+  const trimmed = base.replace(/\s+/g, " ");
   return trimmed.length > MAX_TITLE_LENGTH
     ? trimmed.slice(0, MAX_TITLE_LENGTH).trimEnd() + "…"
     : trimmed;
@@ -41,16 +47,44 @@ const deleteConversation = asyncHandler(async (req, res) => {
   res.json({ success: true, message: "Conversation deleted" });
 });
 
-// Streams the assistant's reply as plain text chunks over a chunked HTTP
-// response (not SSE - simpler, and works with a POST body which native
-// EventSource can't do). The frontend reads this with a ReadableStream
-// reader for a live "typing" effect. The conversation id is returned via
-// the X-Chat-Id header since the body is reserved for streamed text.
+async function extractFileText(file) {
+  try {
+    if (file.mimetype === "application/pdf") {
+      const buffer = fs.readFileSync(file.path);
+      const parsed = await pdfParse(buffer);
+      return parsed.text || "";
+    }
+    return fs.readFileSync(file.path, "utf-8");
+  } finally {
+    fs.unlink(file.path, () => {});
+  }
+}
+
+function historyContent(message) {
+  if (!message.attachment?.extractedText) return message.content;
+  return (
+    `${message.content}\n\n[Attached document: ${message.attachment.fileName}]\n` +
+    message.attachment.extractedText
+  );
+}
+
 const sendMessage = asyncHandler(async (req, res) => {
   const { conversationId, message } = req.body;
+  const file = req.file;
 
-  if (!message || !message.trim()) {
-    throw new ApiError(400, "message is required");
+  if ((!message || !message.trim()) && !file) {
+    throw new ApiError(400, "message or a file is required");
+  }
+
+  const userText = (message || "").trim();
+
+  let extractedText = "";
+  if (file) {
+    try {
+      extractedText = (await extractFileText(file)).trim();
+    } catch (error) {
+      throw new ApiError(400, "Couldn't read that file - make sure it's a valid PDF or text file");
+    }
   }
 
   let conversation;
@@ -63,14 +97,47 @@ const sendMessage = asyncHandler(async (req, res) => {
   } else {
     conversation = await Chat.create({
       userId: req.user.id,
-      title: deriveTitle(message),
+      title: deriveTitle(userText, file?.originalname),
       messages: [],
     });
   }
 
-  const history = conversation.messages.map((m) => ({ role: m.role, content: m.content }));
+  const history = conversation.messages.map((m) => ({
+    role: m.role,
+    content: historyContent(m),
+  }));
 
-  conversation.messages.push({ role: "user", content: message });
+  const user = await User.findById(req.user.id);
+
+  const messageForModel = extractedText
+    ? `${userText || `Please help with the attached document (${file.originalname}).`}\n\n` +
+      `[Attached document: ${file.originalname}]\n${extractedText.slice(0, MAX_EXTRACTED_CHARS)}`
+    : userText;
+
+  const generator = streamChat(history, messageForModel, {
+    name: user?.name,
+    targetRole: user?.targetRole,
+  });
+
+  let firstChunk;
+  try {
+    firstChunk = await generator.next();
+  } catch (error) {
+    console.log("Chat stream failed to start:", error.message);
+    throw new ApiError(502, "The AI assistant is temporarily unavailable. Please try again in a moment.");
+  }
+
+  conversation.messages.push({
+    role: "user",
+    content: userText || `Sent a document: ${file.originalname}`,
+    ...(file && {
+      attachment: {
+        fileName: file.originalname,
+        fileType: file.mimetype,
+        extractedText: extractedText.slice(0, MAX_STORED_EXTRACTED_CHARS),
+      },
+    }),
+  });
 
   res.setHeader("Content-Type", "text/plain; charset=utf-8");
   res.setHeader("X-Chat-Id", conversation._id.toString());
@@ -78,15 +145,20 @@ const sendMessage = asyncHandler(async (req, res) => {
 
   let fullReply = "";
 
+  if (!firstChunk.done && firstChunk.value) {
+    fullReply += firstChunk.value;
+    res.write(firstChunk.value);
+  }
+
   try {
-    for await (const chunk of streamChat(history, message)) {
+    for await (const chunk of generator) {
       fullReply += chunk;
       res.write(chunk);
     }
   } catch (error) {
-    console.log("Chat stream error:", error.message);
+    console.log("Chat stream interrupted:", error.message);
     if (!fullReply) {
-      fullReply = "Sorry, I ran into an error generating a response. Please try again.";
+      fullReply = "Sorry, the response was interrupted. Please try again.";
       res.write(fullReply);
     }
   }
@@ -94,7 +166,6 @@ const sendMessage = asyncHandler(async (req, res) => {
   conversation.messages.push({ role: "assistant", content: fullReply });
   await conversation.save();
 
-  // Fire-and-forget - don't hold up the response for XP/streak bookkeeping.
   recordActivity(req.user.id, { xp: 3 }).catch(() => {});
 
   res.end();
