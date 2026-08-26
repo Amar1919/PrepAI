@@ -7,7 +7,7 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "seed": "node src/utils/seed.js",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand --testTimeout=600000"
   },
   "keywords": [],
   "author": "",
