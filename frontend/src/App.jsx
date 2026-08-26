@@ -11,6 +11,8 @@ const Landing = lazy(() => import("./features/landing/pages/Landing"));
 const NotFound = lazy(() => import("./features/landing/pages/NotFound"));
 const Login = lazy(() => import("./features/auth/pages/Login"));
 const Signup = lazy(() => import("./features/auth/pages/Signup"));
+const ForgotPassword = lazy(() => import("./features/auth/pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./features/auth/pages/ResetPassword"));
 const Dashboard = lazy(() => import("./features/dashboard/pages/Dashboard"));
 const Interviews = lazy(() => import("./features/interviews/pages/Interviews"));
 const Resume = lazy(() => import("./features/resume/pages/Resume"));
@@ -39,6 +41,8 @@ function App() {
                 <Route path="/" element={<Landing />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password/:token" element={<ResetPassword />} />
 
                 {/* Persistent shell: Sidebar + Topbar mount once here and
                     stay mounted across every navigation below - only the

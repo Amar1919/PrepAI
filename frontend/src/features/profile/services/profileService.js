@@ -6,3 +6,6 @@ export const updateProfile = ({ name, targetRole }) =>
   API.put("/user/profile", { name, targetRole });
 
 export const getStats = () => API.get("/user/stats");
+
+export const deleteAccount = (password) =>
+  API.delete("/user/account", { data: { password } });

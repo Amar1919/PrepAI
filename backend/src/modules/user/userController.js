@@ -1,8 +1,11 @@
+const bcrypt = require("bcryptjs");
 const Interview = require("../interview/Interview.model");
 const ResumeAnalysis = require("../resume/ResumeAnalysis.model");
 const DSASubmission = require("../dsa/DSASubmission.model");
+const Chat = require("../chat/Chat.model");
 const User = require("./User.model");
 const asyncHandler = require("../../shared/utils/asyncHandler");
+const ApiError = require("../../shared/utils/ApiError");
 const { sanitizeUser } = require("../auth/authController");
 
 const getStats = asyncHandler(async (req, res) => {
@@ -63,4 +66,38 @@ const updateProfile = asyncHandler(async (req, res) => {
   res.json({ success: true, user: sanitizeUser(user) });
 });
 
-module.exports = { getStats, getProfile, updateProfile };
+// Permanently deletes the account and every piece of data tied to it.
+// Requires the current password as confirmation - a destructive,
+// irreversible action shouldn't be one click away from a JWT alone
+// (e.g. an unattended logged-in browser tab).
+const deleteAccount = asyncHandler(async (req, res) => {
+  const { password } = req.body;
+
+  if (!password) {
+    throw new ApiError(400, "Enter your password to confirm account deletion");
+  }
+
+  const user = await User.findById(req.user.id).select("+password");
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    throw new ApiError(400, "Incorrect password");
+  }
+
+  const userId = req.user.id;
+
+  await Promise.all([
+    Interview.deleteMany({ userId }),
+    ResumeAnalysis.deleteMany({ userId }),
+    DSASubmission.deleteMany({ userId }),
+    Chat.deleteMany({ userId }),
+    User.findByIdAndDelete(userId),
+  ]);
+
+  res.json({ success: true, message: "Your account and all associated data have been deleted" });
+});
+
+module.exports = { getStats, getProfile, updateProfile, deleteAccount };

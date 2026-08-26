@@ -70,6 +70,9 @@ function Login() {
                 className="input-field pl-10"
               />
             </div>
+            <Link to="/forgot-password" className="text-xs text-accent-400 hover:text-accent-300">
+                Forgot password?
+              </Link>
           </div>
 
           <button type="submit" disabled={loading} className="btn-primary w-full mt-2">
