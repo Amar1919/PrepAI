@@ -145,7 +145,7 @@ function DSAPractice() {
                       : "bg-base-800 border-base-700 hover:border-base-600"
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center justify-between mb-2 gap-2">
                     <p className="text-sm font-medium text-slate-100">{p.title}</p>
                     <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border shrink-0 ${difficultyColor[p.difficulty]}`}>
                       {p.difficulty}

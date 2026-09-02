@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FiSend, FiZap, FiLoader, FiPaperclip, FiX, FiFileText, FiFile } from "react-icons/fi";
+import { FiSend, FiZap, FiLoader, FiPaperclip, FiX, FiFileText, FiFile, FiMenu, FiPlus } from "react-icons/fi";
 import { useToast } from "../../../shared/context/ToastContext";
 import {
   listConversations,
@@ -30,6 +30,7 @@ function Chat() {
   const [loadingList, setLoadingList] = useState(true);
   const [loadingConversation, setLoadingConversation] = useState(false);
   const [sending, setSending] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const scrollRef = useRef(null);
   const abortRef = useRef(null);
@@ -58,6 +59,7 @@ function Chat() {
   const selectConversation = async (id) => {
     setActiveId(id);
     setLoadingConversation(true);
+    setMobileSidebarOpen(false);
     try {
       const res = await getConversation(id);
       setMessages(res.data.conversation.messages);
@@ -72,6 +74,7 @@ function Chat() {
     setActiveId(null);
     setMessages([]);
     setAttachedFile(null);
+    setMobileSidebarOpen(false);
   };
 
   const handleDelete = async (id) => {
@@ -156,7 +159,8 @@ function Chat() {
   const FileTypeIcon = attachedFile?.type === "application/pdf" ? FiFileText : FiFile;
 
   return (
-    <div className="grid lg:grid-cols-4 gap-4 h-[calc(100vh-8.5rem)]">
+    <div className="grid lg:grid-cols-4 gap-4 h-[calc(100dvh_-_8.5rem)]">
+      {/* Desktop: permanent sidebar column */}
       <div className="card p-4 lg:col-span-1 hidden lg:flex flex-col">
         <ChatSessionSidebar
           conversations={conversations}
@@ -168,7 +172,49 @@ function Chat() {
         />
       </div>
 
+      {/* Mobile: slide-out drawer, same content as the desktop sidebar */}
+      {mobileSidebarOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => setMobileSidebarOpen(false)}
+          />
+          <div className="absolute left-0 top-0 bottom-0 w-[85%] max-w-xs bg-base-900 border-r border-base-700 p-4 flex flex-col animate-fade-in">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-sm font-semibold text-slate-100">Conversations</h2>
+              <button
+                onClick={() => setMobileSidebarOpen(false)}
+                className="text-slate-500 hover:text-slate-200 p-1"
+              >
+                <FiX size={18} />
+              </button>
+            </div>
+            <ChatSessionSidebar
+              conversations={conversations}
+              activeId={activeId}
+              onSelect={selectConversation}
+              onNew={startNewConversation}
+              onDelete={handleDelete}
+              loading={loadingList}
+            />
+          </div>
+        </div>
+      )}
+
       <div className="card lg:col-span-3 flex flex-col overflow-hidden">
+        {/* Mobile-only header bar: menu (open drawer) + new chat shortcut */}
+        <div className="lg:hidden flex items-center justify-between px-3 py-2.5 border-b border-base-700">
+          <button
+            onClick={() => setMobileSidebarOpen(true)}
+            className="btn-ghost px-2 py-1.5 text-sm"
+          >
+            <FiMenu size={16} /> Conversations
+          </button>
+          <button onClick={startNewConversation} className="btn-ghost px-2 py-1.5 text-sm">
+            <FiPlus size={16} /> New
+          </button>
+        </div>
+
         <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-4">
           {loadingConversation ? (
             <p className="text-sm text-slate-500">Loading conversation...</p>

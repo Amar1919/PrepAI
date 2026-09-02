@@ -68,7 +68,7 @@ function Companies() {
           <div className="lg:col-span-3">
             {selected && (
               <div className="card p-5">
-                <div className="flex items-center justify-between mb-1">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
                   <h3 className="text-xl font-semibold text-slate-100 flex items-center gap-2">
                     <span>{selected.logo}</span> {selected.name}
                   </h3>
